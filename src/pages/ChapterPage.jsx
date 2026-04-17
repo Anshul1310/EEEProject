@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import aslAlphabet from '../data/aslAlphabet';
 import { useHandDetection } from '../hooks/useHandDetection';
+import { BookOpen, Camera, MapPin, Clock, CheckCircle, Search, Hand } from 'lucide-react';
 
 export default function ChapterPage({ markComplete, isComplete }) {
   const { letter } = useParams();
@@ -78,13 +79,13 @@ export default function ChapterPage({ markComplete, isComplete }) {
     const status = getDetectionStatus();
     switch (status) {
       case 'correct':
-        return `✅ Correct! You signed "${chapter.letter}" perfectly!`;
+        return `Correct! You signed "${chapter.letter}" perfectly!`;
       case 'incorrect':
         return `Detected: "${detectedLetter}" — Keep trying for "${chapter.letter}"`;
       case 'detecting':
-        return `🔍 Analyzing your hand sign... (${Math.round(confidence * 100)}%)`;
+        return `Analyzing your hand sign... (${Math.round(confidence * 100)}%)`;
       default:
-        return isCameraActive ? '👋 Show your hand sign to the camera' : 'Start the camera to begin practicing';
+        return isCameraActive ? 'Show your hand sign to the camera' : 'Start the camera to begin practicing';
     }
   };
 
@@ -116,7 +117,10 @@ export default function ChapterPage({ markComplete, isComplete }) {
       <div className="chapter-content">
         {/* Instructions Panel */}
         <div className="instructions-panel" id="instructions-panel">
-          <h2>📖 How to Sign</h2>
+          <h2>
+            <BookOpen size={20} style={{ marginRight: '8px' }} />
+            How to Sign
+          </h2>
           
           <div className="sign-display">
             <div className="sign-letter-large">{chapter.letter}</div>
@@ -128,7 +132,8 @@ export default function ChapterPage({ markComplete, isComplete }) {
               />
             </div>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: '4px' }}>
-              📌 ASL Alphabet Reference Chart
+              <MapPin size={16} style={{ marginRight: '4px' }} />
+              ASL Alphabet Reference Chart
             </p>
           </div>
 
@@ -148,7 +153,10 @@ export default function ChapterPage({ markComplete, isComplete }) {
 
         {/* Camera Panel */}
         <div className="camera-panel" id="camera-panel">
-          <h2>📷 Practice Area</h2>
+          <h2>
+            <Camera size={20} style={{ marginRight: '8px' }} />
+            Practice Area
+          </h2>
 
           <div className="camera-container" id="camera-container">
             <video ref={videoRef} playsInline muted />
@@ -157,7 +165,7 @@ export default function ChapterPage({ markComplete, isComplete }) {
             {!isCameraActive && !isLoading && (
               <div className="camera-overlay">
                 <div className="camera-overlay-content">
-                  <div className="camera-overlay-icon">📷</div>
+                  <Camera size={48} className="camera-overlay-icon" />
                   <p className="camera-overlay-text">
                     Click "Start Camera" to begin
                   </p>
@@ -168,7 +176,7 @@ export default function ChapterPage({ markComplete, isComplete }) {
             {isLoading && (
               <div className="camera-overlay">
                 <div className="camera-overlay-content">
-                  <div className="camera-overlay-icon" style={{ animation: 'pulse 1s ease-in-out infinite' }}>⏳</div>
+                  <Clock size={48} className="camera-overlay-icon" style={{ animation: 'pulse 1s ease-in-out infinite' }} />
                   <p className="camera-overlay-text">
                     Loading hand detection model...
                   </p>

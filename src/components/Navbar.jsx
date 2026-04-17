@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { Hand } from 'lucide-react';
 
 export default function Navbar({ completedCount, totalCount, progressPercent }) {
   const navigate = useNavigate();
@@ -11,7 +12,7 @@ export default function Navbar({ completedCount, totalCount, progressPercent }) 
   return (
     <nav className="navbar" id="main-navbar">
       <div className="navbar-brand" onClick={() => navigate('/')} id="navbar-brand">
-        <span className="navbar-brand-icon">🤟</span>
+        <Hand size={24} className="navbar-brand-icon" />
         <span>SignLingo</span>
       </div>
 

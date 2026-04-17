@@ -35,6 +35,10 @@ function App() {
           />
         </Routes>
       </main>
+      <footer className="app-footer">
+        <p>&copy; 2026 SignLingo - Navratna. Built with React and MediaPipe.</p>
+        <p>Learn more about ASL at <a href="https://www.lifeprint.com/" target="_blank" rel="noopener noreferrer">Lifeprint</a>.</p>
+      </footer>
     </div>
   );
 }
