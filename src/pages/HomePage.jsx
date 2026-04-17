@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import aslAlphabet from '../data/aslAlphabet';
-import { BookOpen, Video, TrendingUp, BookMarked } from 'lucide-react';
+import { BookOpen, Video, TrendingUp, BookMarked, CreditCard, Info } from 'lucide-react';
 import aboutImage from '../images/diverse-people-show-sign-language-signs-vector.jpg';
 
 export default function HomePage({ isComplete }) {
@@ -15,6 +15,29 @@ export default function HomePage({ isComplete }) {
           with interactive lessons and real-time hand detection. 
           Practice each letter and track your progress.
         </p>
+        <div className="hero-actions">
+          <button className="btn btn-success hero-action" onClick={() => navigate('/currency')}>
+            Detect Indian Rupee Notes
+          </button>
+          <button className="btn btn-outline hero-action" onClick={() => navigate('/currency-guide')}>
+            <Info size={16} /> Note Detection Guide
+          </button>
+        </div>
+      </section>
+
+      <section className="currency-callout">
+        <div>
+          <h2>New: Indian Rupee Detection</h2>
+          <p>Scan supported ₹20, ₹50, ₹100, and ₹500 notes with your camera in a dedicated detection flow.</p>
+        </div>
+        <div className="currency-callout-actions">
+          <button className="btn btn-primary" onClick={() => navigate('/currency')}>
+            Start Currency Scanner
+          </button>
+          <button className="btn btn-outline" onClick={() => navigate('/currency-guide')}>
+            Open Guide
+          </button>
+        </div>
       </section>
 
       <section className="about-section">
@@ -57,6 +80,13 @@ export default function HomePage({ isComplete }) {
             </div>
             <h3>Step-by-Step Instructions</h3>
             <p>Detailed guides for forming each ASL letter correctly.</p>
+          </div>
+          <div className="feature-item">
+            <div className="feature-icon">
+              <CreditCard size={32} />
+            </div>
+            <h3>Currency Detection</h3>
+            <p>Scan Indian rupee notes and identify supported denominations directly from your webcam.</p>
           </div>
         </div>
       </section>

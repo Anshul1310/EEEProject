@@ -2,6 +2,8 @@ import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import HomePage from './pages/HomePage';
 import ChapterPage from './pages/ChapterPage';
+import CurrencyDetectionPage from './pages/CurrencyDetectionPage';
+import CurrencyGuidePage from './pages/CurrencyGuidePage';
 import { useProgress } from './hooks/useProgress';
 import './App.css';
 
@@ -33,6 +35,8 @@ function App() {
               />
             } 
           />
+          <Route path="/currency" element={<CurrencyDetectionPage />} />
+          <Route path="/currency-guide" element={<CurrencyGuidePage />} />
         </Routes>
       </main>
       <footer className="app-footer">
