@@ -42,9 +42,9 @@ export default function HomePage({ isComplete }) {
 
       <section className="about-section">
         <div className="about-content">
-          <h2>About SignLingo</h2>
+          <h2>About SAARTHI</h2>
           <p>
-            SignLingo is an educational tool designed to help you learn the American Sign Language alphabet through interactive practice. 
+            SAARTHI is an educational tool designed to help you learn the American Sign Language alphabet through interactive practice. 
             Using your webcam and advanced hand detection technology, you can practice signing each letter and receive instant feedback.
           </p>
           <p>

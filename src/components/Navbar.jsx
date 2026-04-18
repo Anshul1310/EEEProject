@@ -13,7 +13,7 @@ export default function Navbar({ completedCount, totalCount, progressPercent }) 
     <nav className="navbar" id="main-navbar">
       <div className="navbar-brand" onClick={() => navigate('/')} id="navbar-brand">
         <Hand size={24} className="navbar-brand-icon" />
-        <span>SignLingo</span>
+        <span>SAARTHI</span>
       </div>
 
       <div className="navbar-stats">
