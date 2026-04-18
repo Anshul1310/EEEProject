@@ -1,22 +1,43 @@
 import { useRef, useState, useCallback, useEffect } from 'react';
-import { classifyIndianRupeeNote } from '../utils/currencyRecognizer';
+import { ref, onValue } from 'firebase/database';
+import { db } from '../firebase';
 
-const requiredConsecutive = 2;
+const requiredConsecutive = 60; // Adjust for scanning speed (60 frames ~ 1 sec)
 
 export function useCurrencyDetection() {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
-  const offscreenCanvasRef = useRef(null);
   const streamRef = useRef(null);
   const animationRef = useRef(null);
+  
   const lastDetectionRef = useRef(null);
   const detectionCountRef = useRef(0);
+  const firebaseNoteRef = useRef(null); // Stores real-time note from DB
 
   const [isLoading, setIsLoading] = useState(false);
   const [isCameraActive, setIsCameraActive] = useState(false);
   const [detectedDenomination, setDetectedDenomination] = useState(null);
   const [confidence, setConfidence] = useState(0);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    // Listen to Firebase Realtime DB
+    const noteRef = ref(db, 'notedenomination');
+    const unsubscribe = onValue(noteRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        // If they store simple int or an object holding the latest amount
+        const val = typeof data === 'object' ? data.amount || data.value || Object.values(data).pop() : data;
+        if (val) {
+          firebaseNoteRef.current = Number(val);
+        }
+      }
+    }, (error) => {
+      console.error('Firebase read error: ', error);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   const resetDetection = useCallback(() => {
     lastDetectionRef.current = null;
@@ -46,10 +67,6 @@ export function useCurrencyDetection() {
   }, [resetDetection]);
 
   const startDetection = useCallback(() => {
-    if (!offscreenCanvasRef.current) {
-      offscreenCanvasRef.current = document.createElement('canvas');
-    }
-
     const detect = () => {
       if (!videoRef.current || !canvasRef.current) {
         animationRef.current = requestAnimationFrame(detect);
@@ -65,6 +82,7 @@ export function useCurrencyDetection() {
         return;
       }
 
+      // Draw camera stream to canvas
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -79,17 +97,8 @@ export function useCurrencyDetection() {
       ctx.fillRect(guideX, guideY, guideWidth, guideHeight);
 
       try {
-        const detectionWidth = 320;
-        const detectionHeight = Math.round((video.videoHeight / video.videoWidth) * detectionWidth);
-        const offscreen = offscreenCanvasRef.current;
-        if (offscreen.width !== detectionWidth || offscreen.height !== detectionHeight) {
-          offscreen.width = detectionWidth;
-          offscreen.height = detectionHeight;
-        }
-        const offscreenCtx = offscreen.getContext('2d');
-        offscreenCtx.drawImage(video, 0, 0, detectionWidth, detectionHeight);
-        const imageData = offscreenCtx.getImageData(0, 0, detectionWidth, detectionHeight);
-        const denomination = classifyIndianRupeeNote(imageData);
+        // Use Firebase mock detection
+        const denomination = firebaseNoteRef.current;
 
         if (denomination) {
           if (denomination === lastDetectionRef.current) {
@@ -99,9 +108,10 @@ export function useCurrencyDetection() {
             detectionCountRef.current = 1;
           }
 
-          const targetRepeat = denomination === 500 ? requiredConsecutive + 2 : requiredConsecutive;
+          const targetRepeat = requiredConsecutive;
           const conf = Math.min(detectionCountRef.current / targetRepeat, 1);
           setConfidence(conf);
+          
           if (detectionCountRef.current >= targetRepeat && conf >= 0.75) {
             setDetectedDenomination(denomination);
           }

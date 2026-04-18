@@ -4,6 +4,7 @@ import HomePage from './pages/HomePage';
 import ChapterPage from './pages/ChapterPage';
 import CurrencyDetectionPage from './pages/CurrencyDetectionPage';
 import CurrencyGuidePage from './pages/CurrencyGuidePage';
+import AdminPage from './pages/AdminPage';
 import { useProgress } from './hooks/useProgress';
 import './App.css';
 
@@ -37,6 +38,7 @@ function App() {
           />
           <Route path="/currency" element={<CurrencyDetectionPage />} />
           <Route path="/currency-guide" element={<CurrencyGuidePage />} />
+          <Route path="/admin" element={<AdminPage />} />
         </Routes>
       </main>
       <footer className="app-footer">
