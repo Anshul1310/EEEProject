@@ -25,10 +25,10 @@ export function useCurrencyDetection() {
     const noteRef = ref(db, 'notedenomination');
     const unsubscribe = onValue(noteRef, (snapshot) => {
       const data = snapshot.val();
-      if (data) {
+      if (data !== null) {
         // If they store simple int or an object holding the latest amount
         const val = typeof data === 'object' ? data.amount || data.value || Object.values(data).pop() : data;
-        if (val) {
+        if (val !== undefined && val !== null) {
           firebaseNoteRef.current = Number(val);
         }
       }
@@ -100,7 +100,7 @@ export function useCurrencyDetection() {
         // Use Firebase mock detection
         const denomination = firebaseNoteRef.current;
 
-        if (denomination) {
+        if (denomination > 0) {
           if (denomination === lastDetectionRef.current) {
             detectionCountRef.current += 1;
           } else {
@@ -117,7 +117,11 @@ export function useCurrencyDetection() {
           }
         } else {
           detectionCountRef.current = Math.max(0, detectionCountRef.current - 1);
-          setConfidence(Math.max(0, detectionCountRef.current / requiredConsecutive));
+          // When denomination is 0 (or null), intentionally keep confidence > 0 
+          // so the UI remains in a "detecting/scanning" state instead of crashing/going idle.
+          const fakeScanningConf = 0.15 + (Math.random() * 0.1); 
+          setConfidence(Math.max(fakeScanningConf, detectionCountRef.current / requiredConsecutive));
+          
           if (detectionCountRef.current === 0) {
             lastDetectionRef.current = null;
             setDetectedDenomination(null);
